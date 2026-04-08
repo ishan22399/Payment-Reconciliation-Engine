@@ -1,92 +1,81 @@
 # Payment Reconciliation Engine
 
-A production-ready reconciliation prototype for matching transaction data from a payments platform against bank settlement records.
+A professional payment reconciliation prototype that matches transaction records to bank settlement data and highlights exceptions.
 
-## Summary
+## Live Deployment
 
-This project is designed to demonstrate end-to-end payment reconciliation workflows with realistic synthetic datasets, edge-case detection, CSV reporting, and a Streamlit dashboard interface.
+- Streamlit app: https://payment-reconciliation-engine-4u6jfti2mnatandfewglxx.streamlit.app/
 
-## Repository Contents
+## Features
 
-- `generate_data.py` — Generate synthetic transaction and settlement datasets with built-in edge cases.
-- `reconcile.py` — Core reconciliation engine, including classification for matches, missing settlements, late settlements, amount mismatches, duplicates, split settlements, and orphan refunds.
-- `report.py` — Export reconciliation results to detailed CSV reports.
-- `main.py` — CLI entrypoint for generating data, running reconciliation, and writing reports.
-- `dashboard.py` — Streamlit web dashboard to drive reconciliation, view summary metrics, and inspect detailed report data.
-- `test_reconcile.py` — Edge-case test suite for validating reconciliation behavior.
-- `requirements.txt` — Python dependencies required to run the app.
+- Synthetic transaction and settlement data generation
+- Reconciliation of payments against bank settlement records
+- Detailed classification of exceptions
+- Export of exception reports to CSV
+- Interactive Streamlit dashboard for review and analysis
 
-## Key Assumptions
+## Supported Rules
 
-- Currency is assumed to be USD.
-- Amounts are rounded to two decimal places.
-- Reconciliation is performed per calendar month based on transaction timestamps.
-- Settlements that fall outside the transaction month are treated as late.
-- `transaction_id` is the primary join key.
-- Refunds may appear as settlement rows with no matching transaction ID.
-- Duplicate settlements are defined as repeated rows with the same `(transaction_id, settled_amount, settlement_date)`.
-- The reconciliation pipeline is strict on amount equality: even a $0.01 difference is reported.
+- Missing settlement detection
+- Late settlement identification
+- Amount mismatches
+- Split settlement handling
+- Duplicate settlement detection
+- Orphan refund classification
 
-## Usage
+## Tech Stack
 
-### Generate test data
+- Python 3.11+ compatible
+- Streamlit for dashboard UI
+- pandas for data handling
+- CSV-based input/output for portability
+
+## Repository Structure
+
+- `dashboard.py` — Streamlit application for interactive reconciliation
+- `main.py` — CLI workflow for generating data and running reconciliation
+- `generate_data.py` — synthetic data generation with real-world edge cases
+- `reconcile.py` — reconciliation engine and result classification
+- `report.py` — CSV report generation
+- `test_reconcile.py` — regression tests for reconciliation scenarios
+- `requirements.txt` — dependency list
+- `LICENSE` — project license
+
+## Getting Started
+
+Install dependencies:
 
 ```bash
-python generate_data.py
+pip install -r requirements.txt
 ```
 
-### Run reconciliation
-
-```bash
-python main.py
-```
-
-### Launch the dashboard
+Run the dashboard:
 
 ```bash
 streamlit run dashboard.py
 ```
 
-### Run tests
+Alternatively, run the CLI flow:
+
+```bash
+python main.py
+```
+
+Run the test suite:
 
 ```bash
 python test_reconcile.py
 ```
 
-## Output
-
-The reconciliation process produces scoped CSV reports in `reports/`:
-
-- `matched.csv`
-- `missing_settlements.csv`
-- `late_settlements.csv`
-- `amount_mismatches.csv`
-- `split_settlements.csv`
-- `duplicate_settlements.csv`
-- `orphan_refunds.csv`
-- `summary.csv`
-
 ## Deployment
 
-### Recommended deployment
+This app is optimized for Streamlit deployment.
 
-This app is best deployed as a Streamlit application.
+Recommended deployment options:
+- Streamlit Community Cloud
+- Render
+- Railway
 
-1. Push the repository to GitHub.
-2. Use Streamlit Community Cloud to deploy `dashboard.py` directly.
-3. Configure the app to use `requirements.txt` for dependencies.
+## License
 
-### Alternative deployment
-
-- Deploy on any Python-friendly host that supports Streamlit.
-- For CLI-only automation, schedule `python main.py` on a server and consume the generated `reports/*.csv` outputs.
-
-## Included Reconciliation Edge Cases
-
-- Late settlement in the next month.
-- Amount rounding discrepancy of $0.01.
-- Duplicate settlement entry.
-- Split settlement across two rows.
-- Linked refund associated with an original transaction.
-- Orphan refund with no transaction match.
-- Missing settlement rows.
+This project is licensed under the MIT License. See `LICENSE` for details.
